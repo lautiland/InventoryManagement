@@ -1,15 +1,20 @@
+package Model;
+
 public class Producto {
+
+    private final int ID;
     private String nombre;
 
-    public Producto(String nombre){
+    public Producto(String nombre, int id){
         this.nombre = nombre;
+        ID = id;
     }
 
     public String getNombre(){
         return this.nombre;
     }
 
-    public void setNombre(String nombre){
-        this.nombre = nombre;
+    public int getID() {
+        return ID;
     }
 }
