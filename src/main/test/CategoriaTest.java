@@ -18,7 +18,7 @@ public class CategoriaTest {
     public void test02SeAgregaUnProductoYLuegoSeLoPide(){
         //Arrange
         Categoria categoria = new Categoria("Categoria 1");
-        Producto producto = new Producto("Producto 1", 1);
+        Producto producto = new Producto("Producto 1", 1, 1);
         //Act
         categoria.agregarProducto(producto);
         //Assert
@@ -29,10 +29,31 @@ public class CategoriaTest {
     public void test03SePideUnProductoQueNoExisteEnLaCategoria(){
         //Arrange
         Categoria categoria = new Categoria("Categoria 1");
-        Producto producto = new Producto("Producto 1", 1);
+        Producto producto = new Producto("Producto 1", 1, 1);
+        categoria.agregarProducto(producto);
+        //Act/Assert
+        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(2));
+    }
+
+    @Test
+    public void test04SeEliminaUnProductoCorrectamente(){
+        //Arrange
+        Categoria categoria = new Categoria("Categoria 1");
+        Producto producto = new Producto("Producto 1", 1, 1);
         //Act
         categoria.agregarProducto(producto);
+        categoria.eliminarProducto(1);
         //Assert
-        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(2));
+        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(1));
+    }
+
+    @Test
+    public void test04SeIntentaEliminarUnProductoQueNoExiste(){
+        //Arrange
+        Categoria categoria = new Categoria("Categoria 1");
+        Producto producto = new Producto("Producto 1", 1, 1);
+        categoria.agregarProducto(producto);
+        //Act/Assert
+        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.eliminarProducto(2));
     }
 }

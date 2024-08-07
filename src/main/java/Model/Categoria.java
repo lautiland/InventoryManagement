@@ -21,6 +21,16 @@ public class Categoria {
         PRODUCTOS.add(producto);
     }
 
+    public void eliminarProducto(int ID){
+        for (Producto producto : PRODUCTOS) {
+            if(producto.getID() == ID){
+                PRODUCTOS.remove(producto);
+                return;
+            }
+        }
+        throw new ObjetoNoEncontradoEnCategoriaException();
+    }
+
     public Producto buscarProducto(int ID){
         for (Producto producto : PRODUCTOS) {
             if(producto.getID() == ID){

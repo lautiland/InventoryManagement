@@ -28,6 +28,18 @@ public class Inventario {
         categoria.agregarProducto(producto);
     }
 
+    public void eliminarProducto(int ID) {
+        for (Categoria categoria : CATEGORIAS) {
+            try {
+                categoria.eliminarProducto(ID);
+                return;
+            } catch (ObjetoNoEncontradoEnCategoriaException ignored) {
+
+            }
+        }
+        throw new ObjetoNoEncontradoEnInventarioException();
+    }
+
     public Producto buscarProducto(int ID) {
         for (Categoria categoria : CATEGORIAS) {
             try {
