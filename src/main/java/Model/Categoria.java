@@ -1,6 +1,7 @@
 package Model;
 
-import Model.exception.ObjetoNoEncontradoEnCategoriaException;
+import Model.exception.ProductoNoEncontradoEnCategoriaException;
+import Model.producto.Producto;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class Categoria {
                 return;
             }
         }
-        throw new ObjetoNoEncontradoEnCategoriaException();
+        throw new ProductoNoEncontradoEnCategoriaException();
     }
 
     public Producto buscarProducto(int ID){
@@ -37,7 +38,7 @@ public class Categoria {
                 return producto;
             }
         }
-        throw new ObjetoNoEncontradoEnCategoriaException();
+        throw new ProductoNoEncontradoEnCategoriaException();
     }
 
 }

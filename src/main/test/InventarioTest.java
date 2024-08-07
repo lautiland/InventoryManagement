@@ -1,8 +1,8 @@
 import Model.Inventario;
-import Model.Producto;
+import Model.producto.Producto;
 import Model.exception.CategoriaExistenteException;
 import Model.exception.CategoriaInexistenteException;
-import Model.exception.ObjetoNoEncontradoEnInventarioException;
+import Model.exception.ProductoNoEncontradoEnInventarioException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +31,7 @@ public class InventarioTest {
         //Act
         inventario.cargarProducto(producto, nombreCategoria);
         //Assert
-        assertThrows(ObjetoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(2));
+        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(2));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class InventarioTest {
         //Act
         inventario.eliminarProducto(1);
         //Assert
-        assertThrows(ObjetoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(1));
+        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(1));
     }
 
     @Test
@@ -76,6 +76,38 @@ public class InventarioTest {
         inventario.crearCategoria(nombreCategoria);
         inventario.cargarProducto(producto, nombreCategoria);
         //Act/Assert
-        assertThrows(ObjetoNoEncontradoEnInventarioException.class, () -> inventario.eliminarProducto(2));
+        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.eliminarProducto(2));
+    }
+
+    @Test
+    public void test07SeCreaUnaCategoriaYLuegoSeLaElimina(){
+        //Arrange
+        String nombreCategoria = "Categoria 1";
+        Inventario inventario = new Inventario();
+        inventario.crearCategoria(nombreCategoria);
+        Producto producto = new Producto("Producto 1", 1, 1);
+        //Act
+        inventario.eliminarCategoria(nombreCategoria);
+        //Assert
+        assertThrows(CategoriaInexistenteException.class, () -> inventario.cargarProducto(producto, nombreCategoria));
+    }
+
+    @Test
+    public void test08NoSePuedeEliminarUnaCategoriaInexistente(){
+        //Arrange
+        Inventario inventario = new Inventario();
+        //Act/Assert
+        assertThrows(CategoriaInexistenteException.class, () -> inventario.eliminarCategoria("Categoria 1"));
+    }
+
+    @Test
+    public void test09SePuedeCargarUnProductoSinCategoria(){
+        //Arrange
+        Inventario inventario = new Inventario();
+        Producto producto = new Producto("Producto 1", 1, 1);
+        //Act
+        inventario.cargarProducto(producto);
+        //Assert
+        assertEquals(inventario.buscarProducto(1), producto);
     }
 }

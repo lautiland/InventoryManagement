@@ -1,6 +1,6 @@
 import Model.Categoria;
-import Model.Producto;
-import Model.exception.ObjetoNoEncontradoEnCategoriaException;
+import Model.producto.Producto;
+import Model.exception.ProductoNoEncontradoEnCategoriaException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +32,7 @@ public class CategoriaTest {
         Producto producto = new Producto("Producto 1", 1, 1);
         categoria.agregarProducto(producto);
         //Act/Assert
-        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(2));
+        assertThrows(ProductoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(2));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class CategoriaTest {
         categoria.agregarProducto(producto);
         categoria.eliminarProducto(1);
         //Assert
-        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(1));
+        assertThrows(ProductoNoEncontradoEnCategoriaException.class, () -> categoria.buscarProducto(1));
     }
 
     @Test
@@ -54,6 +54,6 @@ public class CategoriaTest {
         Producto producto = new Producto("Producto 1", 1, 1);
         categoria.agregarProducto(producto);
         //Act/Assert
-        assertThrows(ObjetoNoEncontradoEnCategoriaException.class, () -> categoria.eliminarProducto(2));
+        assertThrows(ProductoNoEncontradoEnCategoriaException.class, () -> categoria.eliminarProducto(2));
     }
 }

@@ -1,4 +1,6 @@
-import Model.Fecha;
+package producto;
+
+import Model.producto.Fecha;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,8 +85,8 @@ public class FechaTest {
     @Test
     public void test10SeComparanDosFechasMismoAnioYSonDistintas(){
         //Arrange/Act
-        Fecha fecha1 = new Fecha(1, 1, 2021);
-        Fecha fecha2 = new Fecha(4, 2, 2021);
+        Fecha fecha1 = new Fecha(1, 2, 2021);
+        Fecha fecha2 = new Fecha(4, 1, 2021);
         //Assert
         assertFalse(fecha1.equals(fecha2));
     }
@@ -93,7 +95,7 @@ public class FechaTest {
     public void test11SeComparanDosFechasMismoMesYSonDistintas(){
         //Arrange/Act
         Fecha fecha1 = new Fecha(1, 1, 2021);
-        Fecha fecha2 = new Fecha(3, 1, 2020);
+        Fecha fecha2 = new Fecha(3, 1, 2021);
         //Assert
         assertFalse(fecha1.equals(fecha2));
     }
@@ -102,7 +104,7 @@ public class FechaTest {
     public void test12SeComparanDosFechasMismoDiaYSonDistintas(){
         //Arrange/Act
         Fecha fecha1 = new Fecha(1, 1, 2021);
-        Fecha fecha2 = new Fecha(1, 2, 2020);
+        Fecha fecha2 = new Fecha(1, 2, 2022);
         //Assert
         assertFalse(fecha1.equals(fecha2));
     }

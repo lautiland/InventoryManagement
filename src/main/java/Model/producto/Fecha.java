@@ -1,4 +1,4 @@
-package Model;
+package Model.producto;
 
 import java.time.LocalDate;
 
@@ -54,7 +54,7 @@ public class Fecha {
     public boolean equals(Object obj){
         if(obj instanceof Fecha){
             Fecha fecha = (Fecha) obj;
-            return DIA == fecha.getDia() && MES == fecha.getMes() && ANIO == fecha.getAnio();
+            return this.toString().equals(fecha.toString());
         }
         return false;
     }
