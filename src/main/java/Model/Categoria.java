@@ -1,5 +1,6 @@
 package Model;
 
+import Model.criterio.Criterio;
 import Model.exception.ProductoNoEncontradoEnCategoriaException;
 import Model.producto.Producto;
 
@@ -39,6 +40,10 @@ public class Categoria {
             }
         }
         throw new ProductoNoEncontradoEnCategoriaException();
+    }
+
+    public ArrayList<Producto> obtenerProductosSegunCriterio(Criterio criterio){
+        return criterio.sort(PRODUCTOS);
     }
 
 }

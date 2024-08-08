@@ -1,5 +1,6 @@
 package Model;
 
+import Model.criterio.Criterio;
 import Model.exception.CategoriaExistenteException;
 import Model.exception.CategoriaInexistenteException;
 import Model.exception.ProductoNoEncontradoEnCategoriaException;
@@ -74,5 +75,13 @@ public class Inventario {
             }
         }
         throw new CategoriaInexistenteException();
+    }
+
+    public ArrayList<Producto> obtenerProductosSegunCriterio(Criterio criterio){
+        ArrayList<Producto> productos = new ArrayList<>();
+        for (Categoria categoria : CATEGORIAS) {
+            productos.addAll(categoria.obtenerProductosSegunCriterio(criterio));
+        }
+        return criterio.sort(productos);
     }
 }
