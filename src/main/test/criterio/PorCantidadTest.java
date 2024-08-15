@@ -24,9 +24,9 @@ public class PorCantidadTest {
         Producto producto1 = new Producto("Producto1", 1, 1);
         Producto producto2 = new Producto("Producto2", 2, 2);
         Producto producto3 = new Producto("Producto3", 3, 3);
-        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 3, 1);
-        Lote lote2 = new Lote(2, new Fecha(), new Fecha(), 1, 2);
-        Lote lote3 = new Lote(3, new Fecha(), new Fecha(), 2, 3);
+        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 3);
+        Lote lote2 = new Lote(2, new Fecha(), new Fecha(), 1);
+        Lote lote3 = new Lote(3, new Fecha(), new Fecha(), 2);
         producto1.cargarLote(lote1);
         producto2.cargarLote(lote2);
         producto3.cargarLote(lote3);

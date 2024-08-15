@@ -1,26 +1,41 @@
 package Model.producto;
 
+import Model.exception.CantidadNegativaException;
+
 public class Lote {
 
     private final int CODIGO;
     private final Fecha INGRESO;
     private final Fecha VENCIMIENTO;
-    private final Precio PRECIO_DE_COMPRA;
     private int cantidad;
 
-    public Lote(int codigo, Fecha ingreso, Fecha vencimiento, int cantidad, double precio) {
+    public Lote(int codigo, Fecha ingreso, Fecha vencimiento, int cantidad) {
         CODIGO = codigo;
         INGRESO = ingreso;
         VENCIMIENTO = vencimiento;
-        PRECIO_DE_COMPRA = new Precio(precio);
         this.cantidad = cantidad;
-    }
-
-    public double getPrecioDeCompra() {
-        return PRECIO_DE_COMPRA.getValor();
     }
 
     public int getCantidad(){
         return cantidad;
+    }
+
+    public void quitarCantidad(int cantidad){
+        if (cantidad < 0 || this.cantidad - cantidad < 0){
+            throw new CantidadNegativaException();
+        }
+        this.cantidad -= cantidad;
+    }
+
+    public Fecha getVencimiento() {
+        return VENCIMIENTO;
+    }
+
+    public Fecha getIngreso() {
+        return INGRESO;
+    }
+
+    public int getCodigo() {
+        return CODIGO;
     }
 }

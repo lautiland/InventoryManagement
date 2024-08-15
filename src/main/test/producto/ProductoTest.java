@@ -1,5 +1,6 @@
 package producto;
 
+import Model.exception.CantidadInsuficienteException;
 import Model.producto.Fecha;
 import Model.producto.Lote;
 import Model.producto.Producto;
@@ -54,7 +55,7 @@ public class ProductoTest {
     public void test06SeCargaUnLoteYSeConsultaLaCantidad(){
         //Arrange
         Producto producto = new Producto("Producto 1", 1, 1);
-        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 5, 1);
+        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 5);
         //Act
         producto.cargarLote(lote1);
         //Assert
@@ -71,4 +72,39 @@ public class ProductoTest {
         assertEquals(producto.getPrecioDeVenta(), 4);
     }
 
+    @Test
+    public void test08SeCargaUnProductoYSeEliminaCantidad(){
+        //Arrange
+        Producto producto = new Producto("Producto 1", 1, 1);
+        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 5);
+        //Act
+        producto.cargarLote(lote1);
+        producto.eliminarCantidad(3);
+        //Assert
+        assertEquals(producto.getCantidad(), 2);
+    }
+
+    @Test
+    public void test09SeCargaUnProductoYSeEliminaCantidadMayorALaDisponible(){
+        //Arrange
+        Producto producto = new Producto("Producto 1", 1, 1);
+        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 5);
+        producto.cargarLote(lote1);
+        //Act/Assert
+        assertThrows(CantidadInsuficienteException.class, () -> producto.eliminarCantidad(6));
+    }
+
+    @Test
+    public void test10SeCargaUnProductoYSeEliminaCantidadDeVariosLotes(){
+        //Arrange
+        Producto producto = new Producto("Producto 1", 1, 1);
+        Lote lote1 = new Lote(1, new Fecha(), new Fecha(), 5);
+        Lote lote2 = new Lote(2, new Fecha(), new Fecha(), 5);
+        producto.cargarLote(lote1);
+        producto.cargarLote(lote2);
+        //Act
+        producto.eliminarCantidad(7);
+        //Assert
+        assertEquals(producto.getCantidad(), 3);
+    }
 }

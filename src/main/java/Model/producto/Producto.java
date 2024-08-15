@@ -1,6 +1,7 @@
 package Model.producto;
 
 import Model.Identificable;
+import Model.exception.CantidadInsuficienteException;
 
 import java.util.ArrayList;
 
@@ -56,8 +57,28 @@ public class Producto implements Identificable {
 
     public void cargarLote(Lote lote){
         LOTES.add(lote);
-        //TODO: Implementar el ponderado de precios de compra con varios strategy
-        setPrecioDeCompra(lote.getPrecioDeCompra());
+    }
+
+    public void eliminarCantidad(int cantidad){
+        int cantidadRestante = cantidad;
+        LOTES.sort((lote1, lote2) -> lote1.getVencimiento().esMayor(lote2.getVencimiento()) ? 1 :
+                                    lote2.getVencimiento().esMayor(lote1.getVencimiento()) ? -1 :
+                                    0);
+        for (Lote lote : LOTES) {
+            if (cantidadRestante > 0) {
+                int cantidadLote = lote.getCantidad();
+                if (cantidadLote >= cantidadRestante) {
+                    lote.quitarCantidad(cantidadRestante);
+                    cantidadRestante = 0;
+                } else {
+                    lote.quitarCantidad(cantidadLote);
+                    cantidadRestante -= cantidadLote;
+                }
+            }
+        }
+        if (cantidadRestante > 0) {
+            throw new CantidadInsuficienteException();
+        }
     }
 
 }
