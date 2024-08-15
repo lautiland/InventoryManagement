@@ -9,7 +9,8 @@ public class Producto implements Identificable {
     private final int ID;
     private final String NOMBRE;
     private final ArrayList<Lote> LOTES = new ArrayList<>();
-    private Precio venta;
+    private Precio costoDeProduccion;
+    private Precio rentabilidad;
     private Precio compra;
 
     public Producto(String nombre, int id, double compra){
@@ -29,12 +30,12 @@ public class Producto implements Identificable {
     }
 
     public void setPrecioDeVenta(double costoDeProduccion, double rentabilidad){
-        double costo = costoDeProduccion + compra.getValor();
-        venta = new Precio(costo * (100 / (100 - rentabilidad)));
+        this.costoDeProduccion = new Precio(costoDeProduccion);
+        this.rentabilidad = new Precio(rentabilidad);
     }
 
     public double getPrecioDeVenta(){
-        return venta.getValor();
+        return (costoDeProduccion.getValor() + compra.getValor()) * (100 / (100 - rentabilidad.getValor()));
     }
 
     public void setPrecioDeCompra(double compra){
