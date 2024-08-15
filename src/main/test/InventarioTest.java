@@ -1,47 +1,45 @@
+import Model.Categoria;
 import Model.Inventario;
+import Model.criterio.Criterio;
+import Model.criterio.PorID;
+import Model.exception.*;
 import Model.producto.Producto;
-import Model.exception.CategoriaExistenteException;
-import Model.exception.CategoriaInexistenteException;
-import Model.exception.ProductoNoEncontradoEnInventarioException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InventarioTest {
 
     @Test
-    public void test01SeCargaUnProductoYLuegoSeConsultaPorID(){
+    public void test01SeCargaUnProductoYLuegoSeConsultaPorID() throws IdentificableNoEncontradoException, IdentificableYaExisteException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
         Producto producto = new Producto("Producto 1", 1, 1);
-        inventario.crearCategoria(nombreCategoria);
         //Act
-        inventario.cargarProducto(producto, nombreCategoria);
+        inventario.agregarIdentificable(producto);
         //Assert
-        assertEquals(inventario.buscarProducto(1), producto);
+        assertEquals(inventario.obtenerIdentificable(1), producto);
     }
 
     @Test
-    public void test02SeCargaUnProductoYLuegoSeConsultaPorIDInvalido(){
+    public void test02SeCargaUnProductoYLuegoSeConsultaUnIDInvalido() throws IdentificableYaExisteException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
         Producto producto = new Producto("Producto 1", 1, 1);
-        inventario.crearCategoria(nombreCategoria);
         //Act
-        inventario.cargarProducto(producto, nombreCategoria);
+        inventario.agregarIdentificable(producto);
         //Assert
-        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(2));
+        assertThrows(IdentificableNoEncontradoException.class, () -> inventario.obtenerIdentificable(2));
     }
 
     @Test
-    public void test03SeIntentaCrearCategoriaConNombreExistente(){
+    public void test03SeIntentaCargarCategoriaConIDExistente() throws IdentificableYaExisteException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
-        inventario.crearCategoria(nombreCategoria);
+        Categoria categoria = new Categoria("Categoria 1", 1);
+        Categoria categoria2 = new Categoria("Categoria 2", 1);
+        inventario.agregarIdentificable(categoria);
         //Act/Assert
-        assertThrows(CategoriaExistenteException.class, () -> inventario.crearCategoria(nombreCategoria));
+        assertThrows(IdentificableYaExisteException.class, () -> inventario.agregarIdentificable(categoria2));
     }
 
     @Test
@@ -50,64 +48,61 @@ public class InventarioTest {
         Inventario inventario = new Inventario();
         Producto producto = new Producto("Producto 1", 1, 1);
         //Act/Assert
-        assertThrows(CategoriaInexistenteException.class, () -> inventario.cargarProducto(producto, "Categoria 1"));
+        assertThrows(CategoriaInexistenteException.class, () -> inventario.agregarIdentificable(producto, 3));
     }
 
     @Test
-    public void test05SeCargaUnProductoYLuegoSeLoElimina(){
+    public void test05SeEliminaUnProductoYLuegoSeLoPide() throws IdentificableYaExisteException, IdentificableNoEncontradoException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
         Producto producto = new Producto("Producto 1", 1, 1);
-        inventario.crearCategoria(nombreCategoria);
-        inventario.cargarProducto(producto, nombreCategoria);
+        inventario.agregarIdentificable(producto);
         //Act
-        inventario.eliminarProducto(1);
+        inventario.eliminarIdentificable(1);
         //Assert
-        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.buscarProducto(1));
+        assertThrows(IdentificableNoEncontradoException.class, () -> inventario.obtenerIdentificable(1));
     }
 
     @Test
-    public void test06SeIntentaEliminarProductoInexistente(){
+    public void test06SeIntentaEliminarProductoInexistente() throws IdentificableYaExisteException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
         Producto producto = new Producto("Producto 1", 1, 1);
-        inventario.crearCategoria(nombreCategoria);
-        inventario.cargarProducto(producto, nombreCategoria);
+        inventario.agregarIdentificable(producto);
         //Act/Assert
-        assertThrows(ProductoNoEncontradoEnInventarioException.class, () -> inventario.eliminarProducto(2));
+        assertThrows(IdentificableNoEncontradoException.class, () -> inventario.eliminarIdentificable(2));
     }
 
     @Test
-    public void test07SeCreaUnaCategoriaYLuegoSeLaElimina(){
+    public void test07SeCargaUnProductoEnSubCategoriaYLuegoSeConsultaPorID() throws IdentificableNoEncontradoException, IdentificableYaExisteException {
         //Arrange
-        String nombreCategoria = "Categoria 1";
         Inventario inventario = new Inventario();
-        inventario.crearCategoria(nombreCategoria);
-        Producto producto = new Producto("Producto 1", 1, 1);
+        Categoria categoria = new Categoria("Categoria 1", 1);
+        Categoria subCategoria = new Categoria("SubCategoria 1", 2);
+        Producto producto = new Producto("Producto 1", 3, 1);
         //Act
-        inventario.eliminarCategoria(nombreCategoria);
+        inventario.agregarIdentificable(categoria);
+        inventario.agregarIdentificable(subCategoria, 1);
+        inventario.agregarIdentificable(producto, 2);
         //Assert
-        assertThrows(CategoriaInexistenteException.class, () -> inventario.cargarProducto(producto, nombreCategoria));
+        assertEquals(inventario.obtenerIdentificable(3), producto);
     }
 
     @Test
-    public void test08NoSePuedeEliminarUnaCategoriaInexistente(){
+    public void test08SeCarganVariosProductosYSeConsultanSegunCriterioPorID() throws IdentificableYaExisteException {
         //Arrange
+        Criterio criterio = new PorID();
         Inventario inventario = new Inventario();
-        //Act/Assert
-        assertThrows(CategoriaInexistenteException.class, () -> inventario.eliminarCategoria("Categoria 1"));
-    }
-
-    @Test
-    public void test09SePuedeCargarUnProductoSinCategoria(){
-        //Arrange
-        Inventario inventario = new Inventario();
-        Producto producto = new Producto("Producto 1", 1, 1);
+        Producto producto1 = new Producto("Producto 1", 10, 1);
+        Producto producto2 = new Producto("Producto 2", 3, 2);
+        Producto producto3 = new Producto("Producto 3", 7, 3);
         //Act
-        inventario.cargarProducto(producto);
+        inventario.agregarIdentificable(producto1);
+        inventario.agregarIdentificable(producto2);
+        inventario.agregarIdentificable(producto3);
         //Assert
-        assertEquals(inventario.buscarProducto(1), producto);
+        assertEquals(inventario.obtenerProductosSegunCriterio(criterio).get(2), producto1);
+        assertEquals(inventario.obtenerProductosSegunCriterio(criterio).get(0), producto2);
+        assertEquals(inventario.obtenerProductosSegunCriterio(criterio).get(1), producto3);
     }
 }

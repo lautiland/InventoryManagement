@@ -1,37 +1,34 @@
 package criterio;
 
-import Model.Inventario;
+import Model.Categoria;
 import Model.criterio.PorID;
 import Model.producto.Producto;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PorIDTest {
+
     @Test
-    public void test01DadaUnaListaDeProductosDevuelveLaListaOrdenadaPorID(){
-        //Arrange
-        Producto producto1 = new Producto("Producto1", 18, 100);
-        Producto producto2 = new Producto("Producto2", 82, 200);
-        Producto producto3 = new Producto("Producto3", 6, 300);
-        Producto producto4 = new Producto("Producto4", 45, 400);
-        //creo la lista de productos con el orden correcto
-        ArrayList<Producto> productosOrdenados = new ArrayList<>();
-        productosOrdenados.add(producto3);
-        productosOrdenados.add(producto1);
-        productosOrdenados.add(producto4);
-        productosOrdenados.add(producto2);
-        //creo el inventario
-        Inventario inventario = new Inventario();
-        inventario.cargarProducto(producto1);
-        inventario.cargarProducto(producto2);
-        inventario.cargarProducto(producto3);
-        inventario.cargarProducto(producto4);
-        //Act
-        ArrayList<Producto> productosOrdenadosPorID = inventario.obtenerProductosSegunCriterio(new PorID());
-        //Assert
-        assertEquals(productosOrdenados, productosOrdenadosPorID);
+    public void test01PorIDSeCreaCorrectamente(){
+        PorID porID = new PorID();
+        assertNotNull(porID);
+    }
+
+    @Test
+    public void test02PorIDOrdenaCorrectamente(){
+        PorID porID = new PorID();
+        Categoria categoria = new Categoria("Categoria", 0);
+        Producto producto1 = new Producto("Producto1", 11, 1);
+        Producto producto2 = new Producto("Producto2", 22, 2);
+        Producto producto3 = new Producto("Producto3", 3, 3);
+        categoria.agregarIdentificable(producto1);
+        categoria.agregarIdentificable(producto2);
+        categoria.agregarIdentificable(producto3);
+
+        assertEquals(producto1, porID.sort(categoria).get(1));
+        assertEquals(producto2, porID.sort(categoria).get(2));
+        assertEquals(producto3, porID.sort(categoria).get(0));
     }
 }

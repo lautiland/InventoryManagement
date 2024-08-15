@@ -1,87 +1,48 @@
 package Model;
-
 import Model.criterio.Criterio;
-import Model.exception.CategoriaExistenteException;
-import Model.exception.CategoriaInexistenteException;
-import Model.exception.ProductoNoEncontradoEnCategoriaException;
-import Model.exception.ProductoNoEncontradoEnInventarioException;
+import Model.exception.*;
 import Model.producto.Producto;
 
 import java.util.ArrayList;
 
 public class Inventario {
-    private final ArrayList<Categoria> CATEGORIAS;
+    private final Categoria productos;
 
     public Inventario(){
-        CATEGORIAS = new ArrayList<>();
-        CATEGORIAS.add(new Categoria("Sin Categoria"));
+        productos = new Categoria("Productos", 0);
     }
 
-    public void crearCategoria(String nombre) {
+    public void agregarIdentificable(Identificable identificable, int categoriaID) throws IdentificableYaExisteException, CategoriaInexistenteException {
         try {
-            obtenerCategoria(nombre);
-            throw new CategoriaExistenteException();
-        } catch (CategoriaInexistenteException e) {
-            CATEGORIAS.add(new Categoria(nombre));
-        }
-    }
-
-    public void cargarProducto(Producto producto, String nombreCategoria) {
-        Categoria categoria = obtenerCategoria(nombreCategoria);
-        categoria.agregarProducto(producto);
-    }
-
-    public void cargarProducto(Producto producto) {
-        cargarProducto(producto, "Sin Categoria");
-    }
-
-    public void eliminarProducto(int ID) {
-        for (Categoria categoria : CATEGORIAS) {
+            productos.obtenerIdentificable(identificable.getID());
+            throw new IdentificableYaExisteException();
+        } catch (IdentificableNoEncontradoException e) {
             try {
-                categoria.eliminarProducto(ID);
-                return;
-            } catch (ProductoNoEncontradoEnCategoriaException ignored) {
-
+                Categoria categoria = (Categoria) obtenerIdentificable(categoriaID);
+                categoria.agregarIdentificable(identificable);
+            } catch (IdentificableNoEncontradoException e2) {
+                throw new CategoriaInexistenteException();
             }
         }
-        throw new ProductoNoEncontradoEnInventarioException();
     }
 
-    public void eliminarCategoria(String nombre) {
-        for (Categoria categoria : CATEGORIAS) {
-            if (categoria.getNombre().equals(nombre)) {
-                CATEGORIAS.remove(categoria);
-                return;
-            }
-        }
-        throw new CategoriaInexistenteException();
+    public void agregarIdentificable(Identificable identificable) throws IdentificableYaExisteException {
+        this.agregarIdentificable(identificable, 0);
     }
 
-    public Producto buscarProducto(int ID) {
-        for (Categoria categoria : CATEGORIAS) {
-            try {
-                return categoria.buscarProducto(ID);
-            } catch (ProductoNoEncontradoEnCategoriaException ignored) {
-
-            }
-        }
-        throw new ProductoNoEncontradoEnInventarioException();
+    public void eliminarIdentificable(int ID) throws IdentificableNoEncontradoException {
+        productos.eliminarIdentificable(ID);
     }
 
-    private Categoria obtenerCategoria(String nombre) {
-        for (Categoria categoria : CATEGORIAS) {
-            if (categoria.getNombre().equals(nombre)) {
-                return categoria;
-            }
+    public Identificable obtenerIdentificable(int ID) throws IdentificableNoEncontradoException {
+        if (ID == 0) {
+            return productos;
         }
-        throw new CategoriaInexistenteException();
+        return productos.obtenerIdentificable(ID);
     }
 
     public ArrayList<Producto> obtenerProductosSegunCriterio(Criterio criterio){
-        ArrayList<Producto> productos = new ArrayList<>();
-        for (Categoria categoria : CATEGORIAS) {
-            productos.addAll(categoria.obtenerProductosSegunCriterio(criterio));
-        }
         return criterio.sort(productos);
     }
+
 }

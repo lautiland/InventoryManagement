@@ -1,8 +1,10 @@
 package Model.producto;
 
+import Model.Identificable;
+
 import java.util.ArrayList;
 
-public class Producto {
+public class Producto implements Identificable {
 
     private final int ID;
     private final String NOMBRE;
@@ -16,10 +18,12 @@ public class Producto {
         this.compra = new Precio(compra);
     }
 
+    @Override
     public int getID() {
         return ID;
     }
 
+    @Override
     public String getNombre(){
         return this.NOMBRE;
     }
